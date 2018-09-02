@@ -1,0 +1,183 @@
+,<doctype html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Simple drag and drop AngularJS directive for HTML5 canvas">
+    <meta name="keywords" content="angular, directive, drag and drop, html5, canvas">
+    <title>Find your parsonality match out of IBM Sametime chat logs</title>
+
+    <link href="styles/styles.css" type="text/css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <script src="js/app/app.js"></script>
+    <script src="js/app/md5.min.js"></script>
+    <script src="js/app/pi.js"></script>
+  </head>
+  <body ng-app="dragDropApp">
+    <div ng-controller="dragDropCtrl">
+      <h1>
+        <center>IBM Sametime Personality Match</center>
+      </h1>
+      <!-- the file will be dropped here -->
+
+      <div style="float:left;margin-bottom:20px;">
+        <drag-drop-canvas></drag-drop-canvas>
+      </div>
+      <div >
+
+
+        <div>
+          Drag and drop your IBM Sametime transcripts on the Sametime<br/> logo, and please do not take the results too
+          seriously ;-). Enjoy!
+          <br/>
+          <br/>
+
+          <table>
+            <tr>
+              <th>
+                Minimum number of words in total needed :
+              </th>
+              <td>
+                <input type="text" ng-init="iMinWordLimitTotal=3500" ng-model="iMinWordLimitTotal" />
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Minimum number of words per message needed :
+              </th>
+              <td>
+                <input type="text" ng-init="iMinWordLimitMessage=5" ng-model="iMinWordLimitMessage" />
+              </td>
+
+              <tr ng-show="iNoOfFilespending!=0">
+                <th>
+                  Number of Sametime transcripts pending :
+                </th>
+                <td>
+                  <span ng-show="iNoOfFilespending!=1000">{{iNoOfFilespending}}</span>
+                </td>
+              </tr>
+              <table>
+              </div>
+              <div class="inProgress" ng-show="loading==true">
+
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div style="clear:both">
+
+            <h2 ng-show="data.isTranscriptUserFound">List of users found</h2>
+
+            <table ng-show="data.isTranscriptUserFound">
+              <th>username</th>
+              <th>number of words</th>
+              <th>analyze</th>
+              <th>status</th>
+              <!--<th>authored text</th>-->
+
+
+              <tr ng-repeat="user in data.user" ng-class="{notReadyToAnalyze : user.readyToAnalyze == false}" >
+                <td> {{user.username}}</td>
+                <td> {{user.noOfWords}}<span ng-if="user.readyToAnalyze == false"> (add more words)</td>
+                  <td><input type="button" value="Analyze personality" class="button" ng-click="analyzePersonality(user.id)" ng-disabled="user.readyToAnalyze == false"></td>
+                  <td> {{user.status}}</td>
+                  <!-- <td><pre>{{user.authoredText}}</pre></td> -->
+                </tr>
+              </table>
+
+              <h2 ng-show="data.isAtLeastOneUserAnalyzed">Personality Match</h2>
+
+              <!-- here we'll compare personality traits between users, let's do the matrix then :) -->
+              <table ng-show="data.isAtLeastOneUserAnalyzed">
+                <tr>
+                  <th/><th ng-repeat="user in data.user" ng-show="user.personality">{{user.username}}</th>
+                </tr>
+                <tr ng-repeat="user in data.user" ng-show="user.personality">
+                  <th>{{user.username}}</th>
+                  <th ng-repeat="user in data.user" ng-show="user.personality">
+
+                    <!--<span ng-show="$index>=$parent.$index"> -->
+                    <span ng-show="user.id!=$parent.user.id" >
+                      <div ng-class="
+                      {percentageSuperHigh:getPersonalityMatch(user.id,$parent.user.id).text=='Match!',
+                      percentageVeryHigh:getPersonalityMatch(user.id,$parent.user.id).text=='Can be friends',
+                      percentageDifferent:getPersonalityMatch(user.id,$parent.user.id).text=='Different',
+                      percentageHigh:getPersonalityMatch(user.id,$parent.user.id).text=='Incompatible'}">
+                      {{getPersonalityMatch(user.id,$parent.user.id).text}}
+                      <!-- <br/>({{getPersonalityMatch(user.id,$parent.user.id).percentage | getPercentage }}) -->
+                    </div>
+                  </span>
+                  <!--</span>-->
+                  <!--
+                  <span ng-show="user.id==$parent.user.id">
+                  <div ng-class="notAvaiable">
+                  N/A
+                </div>
+              </span>
+            -->
+          </th>
+        </tr>
+      </table>
+
+      <h2 ng-show="data.isAtLeastOneUserAnalyzed">Personality Traits</h2>
+
+      <table ng-show="data.isAtLeastOneUserAnalyzed">
+        <tr>
+          <th></th><th ng-repeat="user in data.user" ng-show="user.personality">{{user.username}}</th>
+        </tr>
+        <!--
+        <tr>
+        <th>language</th><td ng-repeat="user in data.user" ng-show="user.personality">{{user.personality.processed_lang}}</td>
+      </tr>
+      <tr>
+      <th>word count</th><td ng-repeat="user in data.user" ng-show="user.personality">{{user.personality.word_count}}</td>
+    </tr>
+  -->
+  <tr ng-repeat="trait in data.user[data.lastTranscriptUserId].personality">
+    <th>
+      {{trait.name}}
+    </th>
+    <td ng-repeat="user in data.user" ng-show="user.personality"
+    ng-init="traitName=trait.name">
+    <div ng-repeat="trait in user.personality | filter: {name:traitName}"
+    ng-class="{percentageIrelevant:trait.percentage  < 60, percentageConsiderable:  (trait.percentage  >= 60 && trait.percentage < 70) , percentageHigh:  (trait.percentage  >= 70  && trait.percentage < 80), percentageVeryHigh: (trait.percentage  >= 80  && trait.percentage < 90), percentageSuperHigh:  trait.percentage  >= 90}">
+    {{trait.percentage | getPercentage}}
+  </div>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<h2 ng-show="data.isTranscriptUserFound">Parsed Sametime transcripts</h2>
+<div ng-repeat="chat in data.chat">
+  <br/>
+  <table>
+    <thead>
+      <b>File name:</b> {{chat.name}}, <b>File Date: </b>{{chat.lastModified}}
+    </thead>
+    <tr>
+      <th>user name</th>
+      <th>timestamp</th>
+      <th>message</th>
+    </tr>
+
+    <tr ng-repeat="transcript in chat">
+      <td>{{transcript.username}}</td>
+      <td>{{transcript.timestamp}}</td>
+      <td>{{transcript.message}}</td>
+    </tr>
+
+  </table>
+</div>
+</div>
+<br/>
+<br/>
+
+<center style="font-size:12pt">
+  <a href="https://www.ibm.com/cloud-computing/bluemix/"><img src="images/bluemix-logo-right.png" height="100px"/></a>  <a href="https://www.ibm.com/cloud-computing/bluemix/watson"><img src="images/IBM-Watson-Logo.png" height="100px"/></a>
+  <br/><br/>
+</center>
+</div>
+</body>
+</html>

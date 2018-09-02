@@ -1,0 +1,94 @@
+canvas {
+    
+    background: url('../images/sametimeicon.png') no-repeat; 
+    background-position: center;
+    height: 260px;
+    width: 480px;
+    color:darkgray;
+    vertical-align:bottom;
+    text-align:right;
+    font-size:40pt;
+}
+.data {
+    width: 200px;
+    height: 200px;
+}
+body {
+font-size:12pt;    
+font-family:Verdana;
+padding-left:30px;
+padding-right:30px;
+}
+         table, th , td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+            font-size:10pt;
+            }
+            
+        table tr:nth-child(odd) {
+            background-color: #f2f2f2;
+            }
+            
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+             }
+.percentageSuperHigh {
+    background:#0e85cd; 
+    color:white;
+    width:-10px;
+    padding-left:10px;
+    }
+
+.percentageVeryHigh {
+    background:#7fba00; 
+    color:white;
+    width:-10px;
+    padding-left:10px;
+    }
+.percentageHigh {
+    background:#f2b312; 
+    color:white;
+    width:-10px;
+    padding-left:10px;
+    }
+.percentageDifferent {
+    background:darkviolet; 
+    color:white;
+    width:-10px;
+    padding-left:10px;    
+}
+.percentageIrelevant,.percentageConsiderable {
+    width:-10px;
+    padding-left:10px;  
+    }
+.notAvaiable {
+    color:gray;
+}
+
+.button {
+    padding:8px;
+}
+.notReadyToAnalyze {
+    color:silver;
+}
+
+.readyToAnalyze {
+    color:black;
+}
+.inProgress {
+            position: fixed;
+            top: 45%;
+            left: 80%;
+            /* bring your own prefixes */
+            transform: translate(-45%, -80%);
+            overflow:auto;
+            height:250px;
+            width:250px;
+            background: url('../images/watson.gif') no-repeat; 
+            background-size: 250px 250px;
+            font-size:40pt;
+ }
+
+
+     

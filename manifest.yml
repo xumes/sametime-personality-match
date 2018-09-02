@@ -1,0 +1,10 @@
+applications:
+- path: .
+  memory: 512M
+  instances: 1
+  domain: eu-gb.mybluemix.net
+  name: sametime-personality-match
+  host: sametime-personality-match
+  disk_quota: 1024M
+  services:
+  - sametime-personality-match-personality_insights
